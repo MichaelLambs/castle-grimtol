@@ -60,13 +60,17 @@ namespace CastleGrimtol.Project
         }
         public void BeginGame()
         {
-            _donkeyEnergy = 4;
+            _donkeyEnergy = 3;
             _playing = true;
             _roomCounter = 0;
             CurrentRoom = AllRooms[_roomCounter];
             Console.Clear();
-            System.Console.WriteLine($"Donkey Energy: {_donkeyEnergy}");
-            System.Console.WriteLine($"{CurrentRoom.Name}");
+            System.Console.WriteLine($@"-------------------
+Donkey Energy: {_donkeyEnergy}");
+            System.Console.WriteLine($@"--------
+{CurrentRoom.Name}
+--------
+            ");
             System.Console.WriteLine($"{CurrentRoom.Description}");
             askQuestion("DONKEY: What do you want!!?");
             ContinueGame();
@@ -74,7 +78,8 @@ namespace CastleGrimtol.Project
 
         public void askQuestion(string str)
         {
-            System.Console.WriteLine(str);
+            System.Console.WriteLine($@"
+-{str}");
             var userInput = Console.ReadLine().ToLower();
             switch (userInput)
             {
@@ -94,7 +99,7 @@ namespace CastleGrimtol.Project
                     {
                         if (CurrentPlayer.Inventory.Count == 0)
                         {
-                            System.Console.WriteLine("DONNKEY: Really? With nothing in my belly. Ahhhhhh! Splat tatta tat tat...");
+                            System.Console.WriteLine("DONKEY: Really? With nothing in my belly. Ahhhhhh! Splat tatta tat tat...");
                             System.Console.WriteLine("NARRATOR: You lose");
                             _playing = false;
 
@@ -124,8 +129,12 @@ namespace CastleGrimtol.Project
                     break;
                 case "look":
                     Console.Clear();
-                    System.Console.WriteLine($"{CurrentRoom.Name}");
-                    System.Console.WriteLine($"{CurrentRoom.Description}");
+                    System.Console.WriteLine($@"
+------------------------------------------------------------
+{CurrentRoom.Name}
+{CurrentRoom.Description}
+------------------------------------------------------------
+");
                     break;
                 case "take cactus":
                     if (CurrentRoom.Name == "The STROLL" && CurrentRoom.Items.Count > 0)
@@ -134,7 +143,25 @@ namespace CastleGrimtol.Project
                     }
                     else
                     {
-                        askQuestion("DONNKEY: Can't take that. I am a donkey and I know that.");
+                        askQuestion(@"
+----------------------------------------------------------
+DONNKEY: Can't take that. I am a donkey and I know that.
+----------------------------------------------------------
+");
+                        ContinueGame();
+                    }
+                    break;
+                case "use cactus":
+                    if (CurrentPlayer.Inventory.Count > 0)
+                    {
+                        UseItem("cactus");
+                    }
+                    else
+                    {   
+                        Console.Clear();
+                        System.Console.WriteLine(@"---------------------------------------------
+DONNKEY: You cannot use what you dont have...
+---------------------------------------------");
                     }
                     break;
                 case "inventory":
@@ -148,14 +175,18 @@ namespace CastleGrimtol.Project
                     }
                     break;
                 default:
-                    System.Console.WriteLine("DONNKEY: You are wasting my time. I am going to kick you soon.");
+                    System.Console.WriteLine(@"
+------------------------------------------------------------                   
+DONNKEY: You are wasting my time. I am getting tired HUMAN!
+------------------------------------------------------------
+");
                     break;
             }
         }
         public void MoveRooms(string str)
         {
 
-            if (_donkeyEnergy == 1)
+            if (_donkeyEnergy == 0)
             {
                 _playing = false;
                 System.Console.WriteLine("Donkey got too tired to hold you and bucked you off the cliff.");
@@ -183,13 +214,31 @@ namespace CastleGrimtol.Project
             {
                 if (CurrentRoom.Name == "The TOP")
                 {
-                    System.Console.WriteLine("DONNKEY: You Made it. Now get off!");
+                    System.Console.WriteLine(@"
+**************************************
+*                                    *
+* DONNKEY: You Made it. Now get off! *
+*                                    *
+**************************************
+                    ");
                     _playing = false;
                 }
                 else
                 {
-                    System.Console.WriteLine($"Donkey Energy: {_donkeyEnergy}");
-                    System.Console.WriteLine(CurrentRoom.Name);
+                    if (_donkeyEnergy == 0)
+                    {
+                        System.Console.WriteLine($@"----------------------------------------------------------------------------------------------
+Donkey Energy: {_donkeyEnergy} - your donkey cannot move. Better find something for him to eat.");
+                    }
+                    else
+                    {
+                        System.Console.WriteLine($@"-------------------
+Donkey Energy: {_donkeyEnergy}");
+                    }
+                    System.Console.WriteLine($@"--------
+{CurrentRoom.Name}
+--------
+                    ");
                     System.Console.WriteLine(CurrentRoom.Description);
                     askQuestion("DONNKEY: What next?");
                 }
@@ -199,23 +248,24 @@ namespace CastleGrimtol.Project
 
         public void takeItem()
         {
+            Console.Clear();
             var cactus = CurrentRoom.Items.Find(i => i.Name == "Cactus");
             if (cactus != null)
             {
                 CurrentRoom.Items.Remove(cactus);
                 CurrentPlayer.Inventory.Add(cactus);
                 System.Console.WriteLine("You took a cactus!");
-                System.Console.WriteLine(@"
-DONKEY: Give me that!
-NARRATOR: The donkey turns around and grabs the cactus out of your hands. He doesnt mind the spikes. He is that thirsty. You notice him give a shutter. And feel his body strengthen.
-                ");
-                _donkeyEnergy+=2;
             }
         }
 
         public void UseItem(string itemName)
         {
-
+            Console.Clear();
+            System.Console.WriteLine($@"
+DONKEY: Give me that!
+NARRATOR: The donkey turns around and grabs the {itemName} out of your hands. He doesnt mind the spikes. He is that thirsty. You feel his body strengthen.
+                ");
+            _donkeyEnergy += 2;
         }
     }
 }

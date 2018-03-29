@@ -15,11 +15,6 @@ namespace CastleGrimtol.Project
             Description = description;
             Directions = new Dictionary<string, Room>();
         }
-        // public Room Begin()
-        // {
-            
-        // }
-
         public void UseItem(Item item)
         {
 
